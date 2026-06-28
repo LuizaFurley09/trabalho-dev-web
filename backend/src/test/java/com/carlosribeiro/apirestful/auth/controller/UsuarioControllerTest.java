@@ -52,7 +52,8 @@ class UsuarioControllerTest {
     }
 
     @Test
-    void recuperarUsuarios_deveRetornarListaDeUsuarios() throws Exception {
+    void recuperarUsuarios() throws Exception {
+        //deve retornar lista de usuários
         when(usuarioService.recuperarUsuarios()).thenReturn(List.of(usuario));
 
         mockMvc.perform(get("/usuarios"))
@@ -65,7 +66,8 @@ class UsuarioControllerTest {
     }
 
     @Test
-    void cadastrarUsuario_comDadosValidos_deveRetornarInfoUsuario() throws Exception {
+    void cadastrarUsuario_comDadosValidos() throws Exception {
+        //deve retornar info usuário
         String json = """
             {
                 "nome": "Carlos",
@@ -89,7 +91,8 @@ class UsuarioControllerTest {
     }
 
     @Test
-    void cadastrarUsuario_comEmailJaCadastrado_deveRetornarDuplicado() throws Exception {
+    void cadastrarUsuario_comEmailJaCadastrado() throws Exception {
+        //deve retornar duplicado
         String json = """
             {
                 "nome": "Carlos",
@@ -110,7 +113,8 @@ class UsuarioControllerTest {
     }
 
     @Test
-    void cadastrarUsuario_comEmailInvalido_deveRetornar400() throws Exception {
+    void cadastrarUsuario_comEmailInvalido() throws Exception {
+        //deve retornar 400
         String json = """
             {
                 "nome": "Carlos",
@@ -128,7 +132,8 @@ class UsuarioControllerTest {
     }
 
     @Test
-    void cadastrarUsuario_comCamposObrigatoriosFaltando_deveRetornar400() throws Exception {
+    void cadastrarUsuario_comCamposObrigatoriosFaltando() throws Exception {
+        //deve retornar 400
         String json = "{}";
 
         mockMvc.perform(post("/usuarios")
@@ -140,5 +145,33 @@ class UsuarioControllerTest {
             .andExpect(jsonPath("$.map.senha").exists());
 
         verify(usuarioService, never()).cadastrarUsuario(any());
+    }
+
+    @Test
+    void recuperarUsuarios_quandoNaoHaUsuarios() throws Exception {
+        // Deve retornar lista vazia
+        when(usuarioService.recuperarUsuarios()).thenReturn(List.of());
+
+        mockMvc.perform(get("/usuarios"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
+    }
+
+    @Test
+    void recuperarUsuarios_naoDeveExporSenha() throws Exception {
+
+        /*
+           ATENÇÃO: este teste documenta uma falha de segurança existente.
+           O endpoint retorna a entidade Usuario completa, incluindo o hash da senha.
+           O teste abaixo está escrito para o comportamento ATUAL (vai passar),
+           mas o ideal é que o controller retorne um DTO sem o campo "senha"
+           e este teste seja invertido para `.doesNotExist()`.
+        */
+        when(usuarioService.recuperarUsuarios()).thenReturn(List.of(usuario));
+
+        mockMvc.perform(get("/usuarios"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].senha").exists()); // <- comportamento indesejado
     }
 }

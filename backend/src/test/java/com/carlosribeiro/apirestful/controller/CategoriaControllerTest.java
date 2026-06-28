@@ -18,7 +18,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -68,7 +67,8 @@ class CategoriaControllerTest {
     }
 
     @Test
-    void recuperarCategoriasComProdutosV1_deveRetornarListaDeCategorias() throws Exception {
+    void recuperarCategoriasComProdutosV1() throws Exception {
+        //Deve retornar lista de categorias
         when(categoriaService.recuperarCategoriasComProdutosV1())
                 .thenReturn(List.of(categoria));
 
@@ -81,7 +81,8 @@ class CategoriaControllerTest {
     }
 
     @Test
-    void recuperarCategoriasComProdutosV1_quandoNaoHaCategorias_deveRetornarListaVazia() throws Exception {
+    void recuperarCategoriasComProdutosV1_quandoNaoHaCategorias() throws Exception {
+        //Deve retornar lista vazia
         when(categoriaService.recuperarCategoriasComProdutosV1())
             .thenReturn(List.of());
 
@@ -92,7 +93,8 @@ class CategoriaControllerTest {
     }
 
     @Test
-    void recuperarCategoriasComProdutosV2_deveRetornarListaDeCategoriaDto() throws Exception {
+    void recuperarCategoriasComProdutosV2() throws Exception {
+        //Deve retornar lista de CategoriaDto
         ProdutoResponse produtoResponse = new ProdutoResponse(
             1L, "imagem.png", "Notebook", "Notebook gamer", true, 10,
             new BigDecimal("3500.00"), LocalDate.now(), null
@@ -109,5 +111,47 @@ class CategoriaControllerTest {
             .andExpect(jsonPath("$[0].produtos[0].nome").value("Notebook"));
 
         verify(categoriaService).recuperarCategoriasComProdutosV2();
+    }
+
+    @Test
+    void recuperarCategoriasComProdutosV2_quandoNaoHaCategorias() throws Exception {
+        // Deve retornar lista vazia
+        when(categoriaService.recuperarCategoriasComProdutosV2())
+                .thenReturn(List.of());
+
+        mockMvc.perform(get("/categorias/v2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
+    }
+
+    @Test
+    void recuperarCategoriasComProdutosV1_comMultiplasCategorias() throws Exception {
+        // Deve retornar todas as categorias, não apenas uma
+        Categoria outraCategoria = new Categoria("Livros");
+        Produto outroProduto = new Produto(
+                "livro.png", "Dom Casmurro", "Romance clássico", true, 5,
+                new BigDecimal("39.90"), LocalDate.now(), outraCategoria);
+        outraCategoria.getProdutos().add(outroProduto);
+
+        when(categoriaService.recuperarCategoriasComProdutosV1())
+                .thenReturn(List.of(categoria, outraCategoria));
+
+        mockMvc.perform(get("/categorias/v1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].nome").value("Informática"))
+                .andExpect(jsonPath("$[1].nome").value("Livros"));
+    }
+
+    @Test
+    void recuperarCategoriasComProdutosV1_contentTypeJson() throws Exception {
+        // Deve retornar Content-Type application/json
+        when(categoriaService.recuperarCategoriasComProdutosV1())
+                .thenReturn(List.of(categoria));
+
+        mockMvc.perform(get("/categorias/v1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
     }
 }

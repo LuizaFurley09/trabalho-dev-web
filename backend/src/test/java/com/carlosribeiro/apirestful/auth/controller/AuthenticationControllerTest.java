@@ -58,7 +58,8 @@ class AuthenticationControllerTest {
     }
 
     @Test
-    void login_comCredenciaisValidas_deveRetornarToken() throws Exception {
+    void login_comCredenciaisValidas() throws Exception {
+        //deve retornar token
         String json = """
             {
                 "email": "carlos@email.com",
@@ -84,15 +85,19 @@ class AuthenticationControllerTest {
     }
 
     @Test
-    void login_comCredenciaisInvalidas_devePropagarBadCredentialsException() throws Exception {
-        // O controller não captura BadCredentialsException de propósito: é o
-        // ExceptionTranslationFilter do Spring Security (configurado em SecurityConfig)
-        // quem converte essa exceção em HTTP 401 na aplicação real.
-        //
-        // Como este teste usa @AutoConfigureMockMvc(addFilters = false), os filtros de
-        // segurança não rodam, então a tradução para 401 não acontece aqui — e não deveria,
-        // pois essa responsabilidade não é do controller. Por isso validamos que a exceção
-        // é de fato propagada (não é engolida) e que o fluxo de geração de token não continua.
+    void login_comCredenciaisInvalidas() throws Exception {
+        // Deve propagar bad credentials exception
+
+        /*
+         O controller não captura BadCredentialsException de propósito: é o
+         ExceptionTranslationFilter do Spring Security (configurado em SecurityConfig)
+         quem converte essa exceção em HTTP 401 na aplicação real.
+
+         Como este teste usa @AutoConfigureMockMvc(addFilters = false), os filtros de
+         segurança não rodam, então a tradução para 401 não acontece aqui — e não deveria,
+         pois essa responsabilidade não é do controller. Por isso validamos que a exceção
+         é de fato propagada (não é engolida) e que o fluxo de geração de token não continua.
+         */
 
         String json = """
             {
@@ -116,7 +121,9 @@ class AuthenticationControllerTest {
     }
 
     @Test
-    void login_comEmailInvalido_deveRetornar400() throws Exception {
+    void login_comEmailInvalido() throws Exception {
+        // Deve retornar 400
+
         String json = """
             {
                 "email": "email-invalido",
@@ -133,7 +140,8 @@ class AuthenticationControllerTest {
     }
 
     @Test
-    void login_comCamposEmBranco_deveRetornar400() throws Exception {
+    void login_comCamposEmBranco() throws Exception {
+        // Deve retornar 400
         String json = """
             {
                 "email": "",
@@ -147,5 +155,34 @@ class AuthenticationControllerTest {
                 .andExpect(status().isBadRequest());
 
         verify(authenticationManager, never()).authenticate(any());
+    }
+
+    @Test
+    void login_quandoUsuarioNaoEncontradoAposAutenticar() throws Exception {
+        /*
+           Caso teórico: autenticação passa, mas o usuário não é encontrado no
+           findByEmail (orElseThrow lança NoSuchElementException).
+           Hoje não há handler para essa exceção em GlobalExceptionHandler,
+           então a requisição deve propagar o erro (500), evidenciando a lacuna.
+        */
+
+        String json = """
+        {
+            "email": "fantasma@email.com",
+            "senha": "123456"
+        }
+        """;
+
+        when(usuarioRepository.findByEmail("fantasma@email.com"))
+                .thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(Exception.class, () ->
+                mockMvc.perform(post("/autenticacao/login")
+                        .contentType("application/json")
+                        .content(json)));
+
+        assertInstanceOf(java.util.NoSuchElementException.class, exception.getCause());
+
+        verify(jwtService, never()).generateAccessToken(any());
     }
 }
