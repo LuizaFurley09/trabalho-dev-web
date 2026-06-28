@@ -115,14 +115,17 @@ const LoginPage = () => {
             Informe seu Email e Senha
           </h2>
           {loginInvalido && (
-            <div className="mb-3 rounded border-2 border-red-600 bg-red-100 px-4 py-3 font-bold text-red-800">
+            <div 
+              data-testid="login-error"
+              className="mb-3 rounded border-2 border-red-600 bg-red-100 px-4 py-3 font-bold text-red-800"
+            >
               {msg}
             </div>
           )}	
           <form onSubmit={handleSubmit(submit)} className="space-y-4">
             <div>
               <label
-                // htmlFor="email"
+                htmlFor="email"
                 className="mb-1 block text-sm font-medium text-gray-700"
                 // Sem block, o <label> é inline.
                 // Se você colocar ambos (label e input) na mesma linha sem quebra (ou colocar
@@ -136,6 +139,8 @@ const LoginPage = () => {
               </label>
               <input
                 {...register("email")} // Adiciona ao input os aributos: onChange, onBlur, name e ref
+                id="email"
+                data-testid="login-email"
                 type="text"
                 placeholder="Informe seu email"
                 // id="email"
@@ -148,7 +153,7 @@ const LoginPage = () => {
             </div>
             <div>
               <label
-                // htmlFor="senha"
+                htmlFor="senha"
                 // Usando hmlFor="senha" no label e id="senha" no input, ao passar o mouse sobre o label Senha
                 // o input abaixo recebe uma borda. Não estou usando isso.
                 className="mb-1 block text-sm font-medium text-gray-700"
@@ -157,6 +162,8 @@ const LoginPage = () => {
               </label>
               <input
                 {...register("senha")}
+                id="senha"
+                data-testid="login-senha"
                 type="password"
                 placeholder="Informe sua senha"
                 // id="senha"
@@ -174,6 +181,7 @@ const LoginPage = () => {
             </div>
             <button
               type="submit"
+              data-testid="login-submit"
               className="w-full cursor-pointer rounded-md bg-green-600 py-2 font-semibold text-white duration-200 hover:bg-green-700"
             >
               Entrar

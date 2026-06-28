@@ -1,0 +1,9 @@
+# Windows 11 - PowerShell
+cd trabalho-dev-web/backend
+$env:RUN_E2E="true"
+.\mvnw.cmd -Dtest=INSIRA_AQUI_O_TESTE_E2E_DESEJADO test
+
+## Ao Finalizar o teste, rode:
+$env:RUN_E2E="false"
+
+.\mvnw.cmd -Dtest=ProdutoCadastroE2ETest test

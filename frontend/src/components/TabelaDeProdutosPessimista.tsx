@@ -47,7 +47,7 @@ const TabelaDeProdutosPessimista = () => {
 
   return (
     <div className="overflow-x-auto mb-3">
-      <table className="w-full border-2 border-gray-400">
+      <table data-testid="tabela-produtos" className="w-full border-2 border-gray-400">
         <thead>
           <tr className="border-2 border-gray-400 bg-gray-300">
             <th className="border-r border-r-gray-200 p-1.5 font-semibold">Id</th>
@@ -60,9 +60,15 @@ const TabelaDeProdutosPessimista = () => {
             <th className="border-r border-r-gray-200 p-1.5 font-semibold">Ação</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody data-testid="produtos-corpo">
           {produtos.map((produto, index) => (
-            <tr key={produto.id} className={"border border-gray-200 " + (index % 2 === 0 ? "bg-white" : "bg-gray-100")}>
+            <tr 
+              key={produto.id}
+              data-testid="produto-linha"
+              data-produto-id={produto.id}
+              data-produto-nome={produto.nome}
+              className={"border border-gray-200 " + (index % 2 === 0 ? "bg-white" : "bg-gray-100")}
+            >
               <td className="border-r border-r-gray-200 text-center py-1 w-[8%]">{produto.id}</td>
               <td className="border-r border-r-gray-200 text-center py-1 w-[10%]">
                 <div className="flex justify-center">
@@ -71,7 +77,13 @@ const TabelaDeProdutosPessimista = () => {
               </td>
               <td className="border-r border-r-gray-200 text-center py-1 w-[13%]">{produto.categoria.nome}</td>
               <td className="border-r border-r-gray-200 ps-2 py-1 w-[20%]">
-                <Link className="font-bold text-green-700" to={"/produtos/" + produto.id}>{produto.nome}</Link> 
+                <Link 
+                  data-testid="produto-nome"
+                  className="font-bold text-green-700" 
+                  to={"/produtos/" + produto.id}
+                >
+                  {produto.nome}
+                </Link> 
               </td>
               <td className="border-r border-r-gray-200 text-center py-1 w-[13%]">{produto.disponivel ? "Sim" : "Não"}</td>
               <td className="border-r border-r-gray-200 text-center py-1 w-[13%]">{dayjs(produto.dataCadastro).format("DD/MM/YYYY")}</td>
