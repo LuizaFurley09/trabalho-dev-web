@@ -21,6 +21,7 @@ const Pesquisa = () => {
   return (
     <input
       onChange={handleChange}
+      data-testid="pesquisa"
       type="text"
       className="input mb-3"
       placeholder="Informe o nome do produto desejado..."
