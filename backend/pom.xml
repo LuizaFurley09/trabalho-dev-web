@@ -118,7 +118,21 @@
             <artifactId>jjwt-api</artifactId>
             <version>0.13.0</version>
         </dependency>
+        <!-- *********************************************** -->
+        <!-- *  Dependências para os testes de controller  *  -->
+        <!-- *********************************************** -->
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
