@@ -36,10 +36,11 @@ const Paginacao = () => {
   return (
     <div className="flex">
       <div className="flex flex-col items-center gap-2">
-        <nav aria-label="Paginação">
+        <nav data-testid="paginacao" aria-label="Paginação">
           <ul className="flex">
             <li>
               <button
+                data-testid="pagina-anterior"
                 type="button"
                 disabled={pagina === 0}
                 onClick={() => tratarPaginacao(pagina - 1)}
@@ -57,6 +58,8 @@ const Paginacao = () => {
             {pages.map((page) => (
               <li key={page}>
                 <button
+                  data-testid={`pagina-${page + 1}`}
+                  aria-current={pagina === page ? "page" : undefined}
                   type="button"
                   onClick={() => tratarPaginacao(page)}
                   className={
@@ -73,6 +76,7 @@ const Paginacao = () => {
 
             <li>
               <button
+                data-testid="pagina-proxima"
                 type="button"
                 disabled={pagina === totalDePaginas - 1}
                 onClick={() => tratarPaginacao(pagina + 1)}
@@ -89,7 +93,9 @@ const Paginacao = () => {
           </ul>
         </nav>
         {atualizandoProdutos && idRemovendo === null && (
-          <span className="text-sm text-green-700">Atualizando...</span>
+          <span data-testid="paginacao-atualizando" className="text-sm text-green-700">
+            Atualizando...
+          </span>
         )}
       </div>
     </div>

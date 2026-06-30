@@ -1,15 +1,15 @@
 package com.carlosribeiro.apirestful.repository;
 
-import com.carlosribeiro.apirestful.model.Categoria;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
+import com.carlosribeiro.apirestful.model.Categoria;
+
 
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
 
-    @Query("select c from Categoria c " +
-        "left outer join c.produtos " +
-        "order by c.id")
+    @Query("select c from Categoria c " + "left join fetch c.produtos " + "order by c.id")
     List<Categoria> recuperarCategoriasComProdutos();
 }

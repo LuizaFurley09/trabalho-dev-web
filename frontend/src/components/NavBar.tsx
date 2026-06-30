@@ -42,6 +42,7 @@ const NavBar = () => {
               Carrinho
             </NavLink>
             <NavLink
+              data-testid="fav"
               className="hidden text-gray-700 hover:text-black md:block"
               to="/favoritos"
             >
@@ -58,6 +59,7 @@ const NavBar = () => {
               Produtos sem Paginação
             </NavLink>
             <NavLink
+              data-testid="com-pag"
               className="text-gray-700 hover:text-black"
               to="/produtos-com-paginacao"
             >
@@ -66,6 +68,7 @@ const NavBar = () => {
             </NavLink>
             <NavLink
               onClick={() => setProdutoSelecionado({} as Produto)}
+              data-testid="cad"
               className="text-gray-700 hover:text-black"
               to="/cadastrar-produto"
             >
