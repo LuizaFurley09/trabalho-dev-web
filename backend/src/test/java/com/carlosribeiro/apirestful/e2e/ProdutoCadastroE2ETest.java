@@ -23,7 +23,7 @@ public class ProdutoCadastroE2ETest {
     private WebDriverWait wait;
     private Actions action;
 
-    private int tempoAguardar = 2000;
+    private int tempoAguardar = 1500;
 
     private static final String FRONTEND_URL = System.getProperty("frontend.url", "http://localhost:5173");
     
@@ -67,23 +67,41 @@ public class ProdutoCadastroE2ETest {
         WebElement nome = driver.findElement(By.id("nome"));
         nome.sendKeys(nomeProduto);
 
+        aguardar(tempoAguardar);
+
         WebElement descricao = driver.findElement(By.id("descricao"));
         descricao.sendKeys("Produto cadastrado pelo teste com Selenium");
+        
+        aguardar(tempoAguardar);
 
         WebElement categoria = driver.findElement(By.id("categoria"));
         categoria.click();
 
+        aguardar(tempoAguardar);
+
         WebElement fruta = driver.findElement(By.cssSelector("#categoria option[value='1']"));
         fruta.click();
 
+        aguardar(tempoAguardar);
+
         WebElement dataCadastro = driver.findElement(By.id("data_cadastro"));
-        dataCadastro.sendKeys("28062026");
+        dataCadastro.sendKeys("28");
+        aguardar(tempoAguardar);
+        dataCadastro.sendKeys("06");
+        aguardar(tempoAguardar);
+        dataCadastro.sendKeys("2026");
 
         WebElement preco = driver.findElement(By.id("preco"));
-        preco.sendKeys("12.50");
+        preco.sendKeys("12");
+        aguardar(tempoAguardar);
+        preco.sendKeys(".50");
+
+        aguardar(tempoAguardar);
 
         WebElement estoque = driver.findElement(By.id("qtd_estoque"));
         estoque.sendKeys("20");
+
+        aguardar(tempoAguardar);
 
         WebElement imagem = driver.findElement(By.id("imagem"));
         imagem.sendKeys("banana.png");
@@ -148,23 +166,39 @@ public class ProdutoCadastroE2ETest {
         WebElement nome = driver.findElement(By.id("nome"));
         nome.sendKeys(nomeProduto);
 
+        aguardar(tempoAguardar);
+
         WebElement descricao = driver.findElement(By.id("descricao"));
         descricao.sendKeys("Produto cadastrado pelo teste com Selenium");
+
+        aguardar(tempoAguardar);
 
         WebElement categoria = driver.findElement(By.id("categoria"));
         categoria.click();
 
+        aguardar(tempoAguardar);
+
         WebElement fruta = driver.findElement(By.cssSelector("#categoria option[value='1']"));
         fruta.click();
 
+        aguardar(tempoAguardar);
+
         WebElement dataCadastro = driver.findElement(By.id("data_cadastro"));
-        dataCadastro.sendKeys("28062026");
+        dataCadastro.sendKeys("28");
+        aguardar(tempoAguardar);
+        dataCadastro.sendKeys("06");
+        aguardar(tempoAguardar);
+        dataCadastro.sendKeys("2026");
 
         WebElement preco = driver.findElement(By.id("preco"));
-        preco.sendKeys("12.50");
+        preco.sendKeys("12");
+        aguardar(tempoAguardar);
+        preco.sendKeys(".50");
 
         WebElement estoque = driver.findElement(By.id("qtd_estoque"));
         estoque.sendKeys("20");
+
+        aguardar(tempoAguardar);
 
         WebElement imagem = driver.findElement(By.id("imagem"));
         imagem.sendKeys("banana");
@@ -207,9 +241,11 @@ public class ProdutoCadastroE2ETest {
         aguardar(tempoAguardar);
 
         email.sendKeys("admin@mail.com");
+        aguardar(tempoAguardar);
 
         WebElement senha = driver.findElement(By.id("senha"));
         senha.sendKeys("desweb");
+        aguardar(tempoAguardar);
 
         WebElement entrar = driver.findElement(By.cssSelector("[data-testid='login-submit']"));
         entrar.click();
