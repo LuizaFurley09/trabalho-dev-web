@@ -76,6 +76,8 @@ public class RotaPrivadaE2ETest {
         WebElement senha = driver.findElement(By.id("senha"));
         senha.sendKeys("desweb");
 
+        aguardar(tempoAguardar);
+
         WebElement entrar = driver.findElement(By.cssSelector("[data-testid='login-submit']"));
         entrar.click();
 
